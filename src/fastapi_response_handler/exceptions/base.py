@@ -1,5 +1,5 @@
 """Application exception hierarchy."""
-from ..schemas import ErrorDetail
+from ..schemas import ErrorDetail, ErrorSpec
 
 
 class APIException(Exception):
@@ -20,6 +20,11 @@ class APIException(Exception):
         self.error_code = error_code if error_code is not None else self.default_error_code
         self.details = details
         super().__init__(self.message)
+
+    @classmethod
+    def from_spec(cls, spec: ErrorSpec) -> "APIException":
+        """Build this exception from an ErrorSpec; the spec's values are authoritative."""
+        return cls(spec.message, status_code=spec.status_code, error_code=spec.error_code, details=list(spec.details) if spec.details is not None else None)
 
 
 class NotFoundException(APIException):

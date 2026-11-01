@@ -5,7 +5,7 @@ from typing import Any, Iterable, Mapping
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 
-from ..schemas import ErrorResponse
+from ..schemas import ErrorSpec, ErrorResponse
 
 _DEFAULTS = (422, 500)
 
@@ -26,7 +26,8 @@ def api_responses(
 
     Explicit status codes and custom models are included even if excluded from
     the defaults. Descriptions and named response-body examples may be
-    supplied for included statuses. Examples document, but do not change,
+    supplied for included statuses; example values may be ErrorSpecs,
+    Pydantic models, or mappings. Examples document, but do not change,
     runtime responses; their values must be safe to publish.
     """
     custom = custom or {}
@@ -52,8 +53,8 @@ def api_responses(
         for name, value in named_examples.items():
             if not isinstance(name, str) or not name.strip():
                 raise ValueError("example names must be non-empty strings")
-            if not isinstance(value, (BaseModel, Mapping)):
-                raise TypeError("example values must be Pydantic models or mappings")
+            if not isinstance(value, (ErrorSpec, BaseModel, Mapping)):
+                raise TypeError("example values must be ErrorSpecs, Pydantic models, or mappings")
     result: dict[int, dict[str, Any]] = {}
     for code in codes:
         try:
@@ -65,7 +66,7 @@ def api_responses(
             result[code]["content"] = {
                 "application/json": {
                     "examples": {
-                        name: {"value": jsonable_encoder(value)}
+                        name: {"value": jsonable_encoder(value.response() if isinstance(value, ErrorSpec) else value)}
                         for name, value in examples[code].items()
                     }
                 }

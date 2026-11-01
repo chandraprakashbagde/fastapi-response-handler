@@ -1,7 +1,7 @@
 """Reusable FastAPI response handling."""
-from .schemas import ErrorDetail, ErrorResponse, SuccessResponse
+from .schemas import ErrorDetail, ErrorSpec, ErrorResponse, SuccessResponse, SuccessSpec
 
-__all__ = ["ErrorDetail", "ErrorResponse", "SuccessResponse"]
+__all__ = ["ErrorDetail", "ErrorSpec", "ErrorResponse", "SuccessResponse", "SuccessSpec"]
 from .responses import error_response, http_response, success_response
 
 __all__ += ["error_response", "http_response", "success_response"]

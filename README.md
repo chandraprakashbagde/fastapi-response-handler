@@ -66,7 +66,9 @@ response = http_response(error, status_code=404, headers={"X-Reason": "missing"}
 raise APIException("User not found", status_code=404, error_code="USER_NOT_FOUND")
 ```
 
-Built-in subclasses: `NotFoundException`, `UnauthorizedException`, `ForbiddenException`, `ConflictException`, `BadRequestException`. Subclass `APIException` and set `default_status_code`, `default_message` and `default_error_code` to define your own. Exception messages and details are **public**; do not include secrets. Register handlers before the first request. Registering replaces existing handlers for those exception types; use `overrides={ExceptionType: handler}` to supply standard `(request, exc)` handlers.
+Built-in subclasses: `NotFoundException`, `UnauthorizedException`, `ForbiddenException`, `ConflictException`, `BadRequestException`. Subclass `APIException` and set `default_status_code`, `default_message` and `default_error_code` to define your own.
+
+To keep every message in exactly one place, define named `ErrorSpec` and `SuccessSpec` objects and reuse them everywhere: raise `SomeException.from_spec(SPEC)` in services, call `error_response(SPEC)` / `success_response(SUCCESS_SPEC, data=...)` in factories, and pass specs directly as `api_responses(..., examples={409: {"name": SPEC}})` values. `SPEC.with_details(*details)` derives variants; spec values are authoritative in `from_spec`. Exception messages and details are **public**; do not include secrets. Register handlers before the first request. Registering replaces existing handlers for those exception types; use `overrides={ExceptionType: handler}` to supply standard `(request, exc)` handlers.
 
 ## OpenAPI
 
@@ -136,4 +138,4 @@ Request validation returns dotted locations and safe fixed messages, never Pydan
 
 Internal Pydantic validation failures are 500s, not automatically 422s. Explicitly catch and translate errors into a safe `APIException` if the application knows they are client errors. Set `debug=False` in production: Starlette debug mode can expose traceback responses. Starlette server-error handling re-raises exceptions after sending a response; tests inspecting 500 bodies should use `TestClient(app, raise_server_exceptions=False)`. Exceptions after streaming has started cannot be replaced with a JSON envelope.
 
-Open the [HTML documentation](docs/index.html) for a responsive guide, or see the Markdown guides: [getting started](docs/getting_started.md), [responses](docs/response_handling.md), [exceptions](docs/exception_handling.md), [customization](docs/customization.md).
+See the Markdown guides: [getting started](docs/getting_started.md), [responses](docs/response_handling.md), [exceptions](docs/exception_handling.md), [customization](docs/customization.md), and the [local installation guide](docs/installation.html).
