@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Install the local fastapi-response-handler package in multiple FastAPI projects.">
+  <title>Local installation guide — fastapi-response-handler</title>
+  <style>
+    :root { color-scheme: dark; --bg: #0a101b; --surface: #101a29; --line: #25354a; --text: #e8f0f8; --muted: #a4b4c7; --teal: #5ce0c0; --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    * { box-sizing: border-box; }
+    html { scroll-padding-top: 6rem; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.7 var(--sans); }
+    a { color: var(--teal); text-decoration: none; } a:hover { text-decoration: underline; }
+    a:focus-visible { outline: 2px solid var(--teal); outline-offset: 4px; }
+    .topbar { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 1rem; min-height: 68px; padding: .8rem max(5%, calc((100% - 1200px)/2)); border-bottom: 1px solid var(--line); background: rgba(10,16,27,.96); }
+    .brand { color: var(--text); font-weight: 750; letter-spacing: -.03em; } .brand span { color: var(--teal); margin-right: .5rem; }
+    .topbar > a:last-child { white-space: nowrap; font-size: .85rem; }
+    .layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); max-width: 1200px; margin: auto; }
+    nav { position: sticky; top: 68px; align-self: start; max-height: calc(100vh - 68px); overflow-y: auto; padding: 2.5rem 1rem; border-right: 1px solid var(--line); }
+    nav p { margin: 0 0 1rem .75rem; color: #71869e; font-size: .67rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    nav a { display: block; padding: .55rem .75rem; color: var(--muted); border-radius: .4rem; font-size: .88rem; }
+    nav a:hover { color: var(--teal); background: var(--surface); text-decoration: none; }
+    main { min-width: 0; max-width: 900px; padding: 3rem clamp(1.4rem, 5vw, 4rem) 6rem; }
+    .eyebrow { color: var(--teal); font: 700 .72rem var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+    h1, h2, h3 { line-height: 1.2; letter-spacing: -.04em; } h1 { margin: 1rem 0; font-size: clamp(2.4rem, 5vw, 4rem); } h1 span { color: var(--teal); }
+    h2 { margin: 0 0 .8rem; font-size: clamp(1.55rem, 3vw, 2rem); } h3 { margin: 1.7rem 0 .5rem; font-size: 1.08rem; }
+    p, li { color: var(--muted); } strong { color: var(--text); } section { padding-top: 3.5rem; } .intro { max-width: 700px; font-size: 1.1rem; }
+    .number { margin-right: .7rem; color: var(--teal); font: 600 .75rem var(--mono); }
+    .code { margin: 1.2rem 0; border: 1px solid var(--line); border-radius: .7rem; overflow: hidden; background: #0c1522; }
+    .code-label { padding: .65rem 1rem; background: #142032; border-bottom: 1px solid var(--line); color: #a9bad0; font: 600 .72rem var(--mono); }
+    pre { margin: 0; padding: 1.1rem; overflow-x: auto; color: #cbd9e9; font: .82rem/1.75 var(--mono); }
+    code { font-family: var(--mono); } p code, li code { padding: .1rem .3rem; border: 1px solid #27433f; border-radius: .25rem; background: #172c35; color: #a7eddb; overflow-wrap: anywhere; font-size: .88em; }
+    .callout { margin: 1.5rem 0; padding: 1rem 1.2rem; border: 1px solid #315255; border-left: 3px solid var(--teal); border-radius: .45rem; background: #12272c; color: #bcd3d3; }
+    footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--line); font-size: .85rem; }
+    @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } nav { position: static; max-height: none; display: flex; overflow-x: auto; gap: .3rem; padding: .6rem 1.4rem; border-right: 0; border-bottom: 1px solid var(--line); } nav p { display: none; } nav a { flex: 0 0 auto; white-space: nowrap; } main { padding-top: 2.5rem; } }
+    @media (max-width: 480px) { .topbar { padding-inline: 1.2rem; } .brand { font-size: .85rem; } pre { font-size: .75rem; } }
+  </style>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="index.html"><span aria-hidden="true">↗</span>fastapi-response-handler</a><a href="index.html">← Documentation</a></header>
+  <div class="layout">
+    <nav aria-label="Installation guide sections"><p>On this page</p><a href="#before-you-start">Before you start</a><a href="#editable">Editable install</a><a href="#wheel">Install a wheel</a><a href="#integrate">Integrate with FastAPI</a><a href="#multiple">Multiple projects</a><a href="#troubleshooting">Troubleshooting</a></nav>
+    <main>
+      <div class="eyebrow">Local development · Python 3.10+</div>
+      <h1>One package.<br><span>Many projects.</span></h1>
+      <p class="intro">Install your local response handler into each FastAPI project's virtual environment, then register its handlers with your app.</p>
+
+      <section id="before-you-start"><h2><span class="number">01 /</span>Before you start</h2>
+        <p>These examples assume the package and your applications are sibling directories. Replace paths with your own if your layout is different.</p>
+        <div class="code"><div class="code-label">Example directory layout</div><pre><code>workspace/
+├── fastapi-response-handler/     # package source
+├── project-one/                  # FastAPI application
+└── project-two/                  # another FastAPI application</code></pre></div>
+        <p>Use Python 3.10 or newer. The package is not automatically published to PyPI; these instructions install it from your local files.</p>
+      </section>
+
+      <section id="editable"><h2><span class="number">02 /</span>Install from local source</h2>
+        <p>For development, an <strong>editable install</strong> links the package source to your app environment. Run these commands from <code>project-one</code>:</p>
+        <div class="code"><div class="code-label">macOS / Linux</div><pre><code>cd project-one
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e ../fastapi-response-handler</code></pre></div>
+        <div class="code"><div class="code-label">Windows PowerShell</div><pre><code>cd project-one
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -e ..\fastapi-response-handler</code></pre></div>
+        <p>If the project already has a virtual environment, activate it instead of creating a new one. For a package elsewhere, replace the relative path with its absolute path and quote paths containing spaces.</p>
+        <div class="callout"><strong>Editable means shared source.</strong> Python source edits are visible to each app using that editable install, usually after restarting its server. Reinstall after changing package dependencies or metadata.</div>
+      </section>
+
+      <section id="wheel"><h2><span class="number">03 /</span>Or install a wheel</h2>
+        <p>A wheel is a built snapshot. Build it from the package directory, then install it into the application's environment:</p>
+        <div class="code"><div class="code-label">macOS / Linux · build</div><pre><code>cd fastapi-response-handler
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install build
+python -m build --wheel
+deactivate</code></pre></div>
+        <div class="code"><div class="code-label">macOS / Linux · install in project-one</div><pre><code>cd ../project-one
+source .venv/bin/activate
+python -m pip install ../fastapi-response-handler/dist/fastapi_response_handler-0.1.0-py3-none-any.whl</code></pre></div>
+        <p>Use the filename generated in <code>dist/</code> if the version changes. On Windows, use the same commands with your environment's PowerShell activation command and a suitable local path. Rebuild and reinstall the wheel after package changes; a wheel does not update automatically.</p>
+      </section>
+
+      <section id="integrate"><h2><span class="number">04 /</span>Register and verify</h2>
+        <p>In your FastAPI application's entry point, register handlers before the first request. Existing applications can keep their own routes and models.</p>
+        <div class="code"><div class="code-label">main.py</div><pre><code>from fastapi import FastAPI
+from fastapi_response_handler import (
+    SuccessResponse, api_responses, register_handlers, success_response,
+)
+
+app = FastAPI()
+register_handlers(app)
+
+@app.get("/hello", response_model=SuccessResponse[dict],
+         responses=api_responses())
+def hello():
+    return success_response("Hello", {"name": "Ada"})</code></pre></div>
+        <p>Confirm the package is installed in the activated environment and start the app. Install Uvicorn in the app environment if it is not already installed.</p>
+        <div class="code"><div class="code-label">Terminal · from your application directory</div><pre><code>python -c "import fastapi_response_handler; print(fastapi_response_handler.__file__)"
+python -m pip install uvicorn
+python -m uvicorn main:app --reload</code></pre></div>
+        <p>Adjust <code>main:app</code> to match your application's module and app variable. Visit <code>http://127.0.0.1:8000/hello</code> for the example and <code>http://127.0.0.1:8000/docs</code> for Swagger.</p>
+      </section>
+
+      <section id="multiple"><h2><span class="number">05 /</span>Use it in another project</h2>
+        <p>Each virtual environment has its own installed packages. Repeat the editable or wheel installation in <code>project-two</code>, then register handlers in that app as well:</p>
+        <div class="code"><div class="code-label">macOS / Linux · from workspace</div><pre><code>cd project-two
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e ../fastapi-response-handler</code></pre></div>
+        <p>Run the import check in each environment. A local path is specific to your machine or workspace, so teammates and deployment environments need access to the same source or wheel and an appropriate path. Installing in one project does not install it in another.</p>
+      </section>
+
+      <section id="troubleshooting"><h2><span class="number">06 /</span>Troubleshooting</h2>
+        <ul>
+          <li><strong>Module not found:</strong> activate the app's environment, use <code>python -m pip</code>, and run the import check with the same Python used to start Uvicorn.</li>
+          <li><strong>Path not found:</strong> relative paths are resolved from the current directory. Verify the package directory contains <code>pyproject.toml</code>, or use a quoted absolute path.</li>
+          <li><strong>Changes are not visible:</strong> restart the app. For a wheel install, rebuild and reinstall the wheel; for an editable install, reinstall after dependency or metadata changes.</li>
+          <li><strong>Dependency conflicts:</strong> the package requires Pydantic v2 and a compatible FastAPI/Starlette version. Check your application's dependency constraints before installing.</li>
+        </ul>
+      </section>
+      <footer><a href="index.html">← Return to the documentation</a></footer>
+    </main>
+  </div>
+</body>
+</html>
